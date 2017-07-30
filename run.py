@@ -25,9 +25,9 @@ def upload_file():
         # delete
         old_files = os.listdir(app.config['UPLOAD_FOLDER'])
 
-
         for file in old_files:
-            if file.endswith(".jpg") or file.endswith('png') or file.endswith('jpeg'):
+            lower_name = file.lower()
+            if lower_name.endswith(".jpg") or lower_name.endswith('png') or lower_name.endswith('jpeg'):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file))
 
         # check if the post request has the file part
@@ -56,6 +56,7 @@ def sfm_and_serve(dir):
     subprocess.call(['bin/opensfm_run_all', dir])
     thread = Thread(target=viz_server, args=(dir,))
     thread.start()
+    thread.join(30)
     print 'viz thread finished'
 
 def viz_server(dir):
