@@ -19,3 +19,5 @@ data/berlin/*
 
 # Ignore virtualenv files
 env/*
+
+uploads/
