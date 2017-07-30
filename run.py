@@ -1,3 +1,4 @@
+# export PYTHONPATH=/usr/local/lib/python2.7/site-packages:$PYTHONPATH
 import os
 from flask import Flask, request, redirect, url_for, render_template, send_file, jsonify
 from werkzeug.utils import secure_filename
@@ -20,8 +21,11 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        print 'starting uploading'
         # delete
         old_files = os.listdir(app.config['UPLOAD_FOLDER'])
+
+
         for file in old_files:
             if file.endswith(".jpg") or file.endswith('png') or file.endswith('jpeg'):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file))
@@ -33,6 +37,9 @@ def upload_file():
             return response
 
         uploaded_files = request.files.getlist('file')
+        print len(uploaded_files)
+        if len(uploaded_files) == 0:
+            return jsonify(message='no files uploaded')
         # save new
         for file in uploaded_files:
             if file and file.filename != '' and allowed_file(file.filename):
@@ -49,7 +56,6 @@ def sfm_and_serve(dir):
     subprocess.call(['bin/opensfm_run_all', dir])
     thread = Thread(target=viz_server, args=(dir,))
     thread.start()
-    thread.join()
     print 'viz thread finished'
 
 def viz_server(dir):

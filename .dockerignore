@@ -12,6 +12,9 @@
 !setup.cfg
 !setup.py
 !viewer
+!run.py
+!templates
+!static
 
 # Picking exceptions
 doc/build
